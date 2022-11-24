@@ -20,7 +20,7 @@ public class BusDao {
         PreparedStatement ps
             = connection.prepareStatement(query);
         ps.setString(1, bus.getBus_id());
-        ps.setString(2, "VIN2323");
+        ps.setString(2, bus.getPlate());
         int n = ps.executeUpdate();
         return n;
     }

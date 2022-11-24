@@ -1,22 +1,22 @@
 public class Driver {
 
-    private int driver_id;
+    private String driver_name;
     private String address;
     private String telephone;
 
     public Driver() {}
   
-    public Driver(int id)
+    public Driver(String name)
     {
-        this.driver_id = id;
+        this.driver_name = name;
     }
 
-    public int getDriver_id() {
-        return driver_id;
+    public String getDriver_id() {
+        return driver_name;
     }
 
-    public void setDriver_id(int driver_id) {
-        this.driver_id = driver_id;
+    public void setDriver_id(String driver_id) {
+        this.driver_name = driver_id;
     }
 
     public String getAddress() {

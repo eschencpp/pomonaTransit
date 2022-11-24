@@ -114,13 +114,11 @@ public class TripOfferingDao {
     }
 
     /**
-    * Display the schedule of all trips for a given StartLocationName and Destination Name, 
-    * and Date. In addition to these attributes, the schedule includes: Scheduled StartTime,  
-    * ScheduledArrivalTime , DriverID, and BusID.   
+    * Display the stops of all trips given a trip number  
     */
     public void displayStops(int tripNum) throws SQLException{
         String query
-            = "SELECT ts.StopNumber "
+            = "SELECT ts.* "
             + "FROM TripStopInfo ts "
             + "WHERE ts.TripNumber = ?";
         PreparedStatement ps
@@ -131,12 +129,35 @@ public class TripOfferingDao {
         int columnsNumber = rsmd.getColumnCount();
         while (rs.next()) {
         for (int i = 1; i <= columnsNumber; i++) {
+            if (i > 1){
+                System.out.print(",  ");
+            }
             String columnValue = rs.getString(i);
-            System.out.print(columnValue + ", ");
+            System.out.print(rsmd.getColumnName(i) + " " + columnValue);
         }
-        
+        System.out.println("");
         } 
     }
 
-    
+    public int addActualTripStopInfo(int tripNum, String date, String scheduleStart, int stopNum,
+                                        String ScheduledArrivalTime, String ActualStartTime, String ActualArrivalTime, 
+                                        int NumberPassengerIn, int NumPassengerOut) throws SQLException{
+        String query
+        = "UPDATE actualtripstopinfo SET ScheduledArrivalTime = ?, ActualStartTime = ?, ActualArrivalTime = ?, NumberOfPassengerIn = ?,"
+        + " NumberofPassengerOut = ? "
+        + "WHERE (TripNumber = ?) and (Date = ?) and (ScheduledStartTime = ?) and (StopNumber = ?)";
+        PreparedStatement ps
+         = connection.prepareStatement(query);
+        ps.setString(1, ScheduledArrivalTime);
+        ps.setString(2, ActualStartTime);
+        ps.setString(3, ActualArrivalTime);
+        ps.setInt(4, NumberPassengerIn);
+        ps.setInt(5, NumPassengerOut);
+        ps.setInt(6, tripNum);
+        ps.setString(7, date);
+        ps.setString(8, scheduleStart);
+        ps.setInt(9, stopNum);
+        int n = ps.executeUpdate();
+        return n;
+    }
 }
