@@ -51,7 +51,7 @@ public class TripOfferingDao {
     */
     public int updateDriver(String newDriver, int tripNum, String date, String startTime)throws SQLException{
         String query
-            = "UPDATE tripoffering SET DriverNum = ? WHERE (Date = ?) and (ScheduledStart = ?) and (TripNumber = ?)";
+            = "UPDATE tripoffering SET DriverName = ? WHERE (Date = ?) and (ScheduledStart = ?) and (TripNumber = ?)";
         PreparedStatement ps
          = connection.prepareStatement(query);
         ps.setString(1, newDriver);
@@ -99,17 +99,17 @@ public class TripOfferingDao {
         ps.setString(2, destination);
         ps.setString(3, date);
         ResultSet rs = ps.executeQuery();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
+        
         while (rs.next()) {
-        for (int i = 1; i <= columnsNumber; i++) {
-            if (i > 1){
-                System.out.print(",  ");
-            }
-            String columnValue = rs.getString(i);
-            System.out.print(rsmd.getColumnName(i) + " " + columnValue);
-        }
-        System.out.println("");
+        int tripNum = rs.getInt("TripNumber");
+        String da = rs.getString("date");
+        String startT = rs.getString("ScheduledStart");
+        String endT = rs.getString("ScheduledArrival");
+        String driverN = rs.getString("driverName");
+        int bid = rs.getInt("busID");
+
+        System.out.printf("Trip number: %d | Date: %s | ScheduledStartTime : %s | ScheduledArrivalTime : %s | "+
+                                    "Driver Name: %s | Bus ID: %d\n",tripNum,da,startT,endT,driverN,bid);
         } 
     }
 

@@ -1,89 +1,54 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 
-/**
- * JDBC
- */
 public class JDBC {
     private static String mainMenu = "Welcome to Pomona Transit System\nSelect an option (1-8) \n1. Find Trip Schedules \n2. Edit Trip Offerings"
         +"\n3. Display trip stops\n4. Display Driver schedule\n5. Add a driver\n6. Add a bus\n7. Delete a bus\n8. Add Actual Trip Stop Info\n9. Exit Program";
     private static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
-        int option = 0;
-        while(option != 9){
+        String option = "";
+        while(!option.equals("9")){
             System.out.println(mainMenu);
             System.out.println("Choose your option: ");
-            option = sc.nextInt();
+            option = sc.next();
             switch (option) {
-                case 1:
+                case "1":
                     displayTripSchedules();
                     break;
-                case 2:
+                case "2":
                     editTripOffer();
                     break;
-                case 3:
+                case "3":
                     showTripStops();
                     break;
-                case 4:
+                case "4":
                     showDriverSchedule();
                     break;
-                case 5:
+                case "5":
                     addDriver();
                     break;
-                case 6:
+                case "6":
                     addBus();
                     break;
-                case 7:
+                case "7":
                     deleteBus();
                     break;
-                case 8:
+                case "8":
                     addActualTripStopInfo();
                     break;
-                case 9:
+                case "9":
                     System.out.println("Program exiting.");
-                    break;
+                    return;
                 default:
+                    System.out.println("Error invalid input. Try again.");
                     break;
             }
+            if(returnToMenu() == 0){
+                System.out.println("Program Exiting.");
+                return;
+            }
         }
-
-
-        try {
-        //     Bus bus1 = new Bus("dawd");
-        //    // BusDao busDao = new BusDao();
-        //     //busDao.add(bus1);
-
-        //     // //Test driver entity
-        //     // Driver driver1 = new Driver(1);
-        //     // DriverDao driverDao = new DriverDao();
-        //     // driverDao.add(driver1);
-
-        //     Stop stop = new Stop(2, "chino2");
-        //     //stopDao stopDao = new stopDao();
-        //    // stopDao.add(stop);
-
-        //     TripOfferingDao tripOfferDao = new TripOfferingDao();
-
-        //     tripOfferDao.showOfferings("california", "chino", "2022-05-22");
-            
-        //     tripOfferDao.displayStops(1);
-        //     tripOfferDao.addActualTripStopInfo(1, "2022-05-22", "6:30", 1, "9:30", 
-        //                                     "8:30", "10:30", 56, 23);
-
-        DriverDao driverDao = new DriverDao();
-        driverDao.showSchedule("1", "2022-05-22");
-
-            
-        } catch (SQLException e) {
-            System.out.println("SQL error");
-            e.printStackTrace();
-        }
-    
     }
 
     private static void displayTripSchedules(){
@@ -93,7 +58,7 @@ public class JDBC {
         String startL = sc.next();
         System.out.println("Enter a destination: ");
         String dest = sc.next();
-        System.out.println("Enter a date: ");
+        System.out.println("Enter a date: (YYYY-MM-DD)");
         String date = sc.next();
         try {
             t.showOfferings(startL, dest, date);
@@ -114,7 +79,7 @@ public class JDBC {
                 System.out.println("Deleting trip offering");
                 System.out.println("Enter a trip number: ");
                 tripNumber = sc.nextInt();
-                System.out.println("Enter a date: ");
+                System.out.println("Enter a date: (YYYY-MM-DD) ");
                 date = sc.next();
                 System.out.println("Enter a start time: ");
                 startTime = sc.next();
@@ -129,46 +94,52 @@ public class JDBC {
                 System.out.println("Adding trip offering");
                 System.out.println("Enter a trip number: ");
                 tripNumber = sc.nextInt();
+                sc.nextLine();
                 System.out.println("Enter a date: (YYYY-MM-DD)");
-                date = sc.next();
+                date = sc.nextLine();
                 System.out.println("Enter the schedueled start time: ");
-                startTime = sc.next();
+                startTime = sc.nextLine();
                 System.out.println("Enter the schedueled arrival time: ");
-                String arrivalTime = sc.next();
+                String arrivalTime = sc.nextLine();
                 System.out.println("Enter the driver name: ");
-                String driver = sc.next();
+                String driver = sc.nextLine();
                 System.out.println("Enter the bus ID: ");
                 int busID = sc.nextInt();
                 TripOffering t = new TripOffering(tripNumber, date, startTime, arrivalTime, driver, busID);
                 try {
                     tr.add(t);
+                    System.out.println("Trip offering added successfully");
+                } catch (SQLException e) {
+                    System.out.println("Error. Offering could not be added.");
+                    e.printStackTrace();
+                    break;
+                }
+                break;
+            case 3: //Edit a driver
+                System.out.println("Editing driver.");
+                System.out.println("Enter a trip number: ");
+                tripNumber = sc.nextInt();
+                sc.nextLine();
+                System.out.println("Enter a date: (YYYY-MM-DD) ");
+                date = sc.nextLine();
+                System.out.println("Enter a start time: ");
+                startTime = sc.nextLine();
+                System.out.println("Enter a the new driver name: ");
+                String driverName = sc.nextLine();
+                try {
+                    tr.updateDriver(driverName, tripNumber, date, startTime);
+                    System.out.println("Successfully updated driver.");
                 } catch (SQLException e) {
                     e.printStackTrace();
                     break;
                 }
                 break;
-            case 3:
-                System.out.println("Editing driver.");
-                System.out.println("Enter a trip number: ");
-                tripNumber = sc.nextInt();
-                System.out.println("Enter a date: ");
-                date = sc.next();
-                System.out.println("Enter a start time: ");
-                startTime = sc.next();
-                System.out.println("Enter a the new driver name: ");
-                String driverName = sc.next();
-                try {
-                    tr.updateDriver(driverName, tripNumber, date, startTime);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    break;
-                }
 
-            case 4:
+            case 4: //Edit bus
                 System.out.println("Editing bus ID.");
                 System.out.println("Enter a trip number: ");
                 tripNumber = sc.nextInt();
-                System.out.println("Enter a date: ");
+                System.out.println("Enter a date: (YYYY-MM-DD) ");
                 date = sc.next();
                 System.out.println("Enter a start time: ");
                 startTime = sc.next();
@@ -180,6 +151,7 @@ public class JDBC {
                     e.printStackTrace();
                     break;
                 }
+                break;
             default:
                 break;
         }
@@ -228,6 +200,7 @@ public class JDBC {
 
         try {
             dr.add(driver);
+            System.out.println("Driver successfully added.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -251,6 +224,7 @@ public class JDBC {
 
         try {
             busDao.add(bus);
+            System.out.println("Bus successfully added.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -276,7 +250,7 @@ public class JDBC {
 
         System.out.println("Enter trip number: ");
         int tripN = sc.nextInt();
-        System.out.println("Enter date: ");
+        System.out.println("Enter date: (YYYY-MM-DD) ");
         String date = sc.next();
         System.out.println("Enter start time: ");
         String startTime = sc.next();
@@ -316,27 +290,27 @@ public class JDBC {
         }
     }
 
-    public int returnToMenu(){
+    public static int returnToMenu(){
         System.out.println("Would you like to return to the main menu? (Y/N)");
 
         String choice = sc.next().toLowerCase();
 
-        if(choice == "y" || choice == "yes"){
-            return 1;
-        }
-
-        switch (choice) {
-            case "y":
-                return 1;
-            case "yes":
-                return 1;
-            case "n":
-                return 0;
-            case "no":
-                return 0;
-            default:
-
-                break;
+        int flag = 0;
+        while(flag == 0){
+            switch (choice) {
+                case "y":
+                    return 1;
+                case "yes":
+                    return 1;
+                case "n":
+                    return 0;
+                case "no":
+                    return 0;
+                default:
+                    flag = 1;
+                    System.out.println("Invalid input. Please enter Y or N");
+                    break;
+            }
         }
 
         return 0;

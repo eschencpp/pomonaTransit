@@ -16,10 +16,11 @@ public class DriverDao {
     //Add a driver to database
     public int add(Driver driver) throws SQLException {
         String query
-            = "insert into driver(DriverName) VALUES (?)";
+            = "insert into driver(DriverName, telephone) VALUES (?,?)";
         PreparedStatement ps
             = connection.prepareStatement(query);
         ps.setString(1, driver.getDriver_id());
+        ps.setString(2, driver.getTelephone());
         int n = ps.executeUpdate();
         return n;
     }
