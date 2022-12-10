@@ -16,11 +16,13 @@ public class BusDao {
     {
         String query
             = "insert into bus(BusID, "
-              + "plate) VALUES (?, ?)";
+              + "plate, year, make) VALUES (?, ?, ?, ?)";
         PreparedStatement ps
             = connection.prepareStatement(query);
         ps.setString(1, bus.getBus_id());
         ps.setString(2, bus.getPlate());
+        ps.setString(3, bus.getYear());
+        ps.setString(4, bus.getMake());
         int n = ps.executeUpdate();
         return n;
     }

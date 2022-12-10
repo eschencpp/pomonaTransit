@@ -21,33 +21,11 @@ public class ActualTripStopInfoDao {
         ps.setString(2, a.getDate());
         ps.setString(3, a.getScheduledStartTime());
         ps.setInt(4, a.getStopNumber());
-        System.out.println(ps.toString());
+        
         int n = ps.executeUpdate();
         return n;
     }
 
-
-    public int updateActualTripStopInfo2(int tripNum, String date, String scheduleStart, int stopNum,
-                                        String ScheduledArrivalTime, String ActualStartTime, String ActualArrivalTime, 
-                                        int NumberPassengerIn, int NumPassengerOut) throws SQLException{
-        String query
-        = "UPDATE actualtripstopinfo SET ScheduledArrivalTime = ?, ActualStartTime = ?, ActualArrivalTime = ?, NumberOfPassengerIn = ?,"
-        + " NumberofPassengerOut = ? "
-        + "WHERE (TripNumber = ?) and (Date = ?) and (ScheduledStartTime = ?) and (StopNumber = ?)";
-        PreparedStatement ps
-         = connection.prepareStatement(query);
-        ps.setString(1, ScheduledArrivalTime);
-        ps.setString(2, ActualStartTime);
-        ps.setString(3, ActualArrivalTime);
-        ps.setInt(4, NumberPassengerIn);
-        ps.setInt(5, NumPassengerOut);
-        ps.setInt(6, tripNum);
-        ps.setString(7, date);
-        ps.setString(8, scheduleStart);
-        ps.setInt(9, stopNum);
-        int n = ps.executeUpdate();
-        return n;
-    }
     public int updateActualTripStopInfo(ActualTripStopInfo a) throws SQLException{
         String query
         = "UPDATE actualtripstopinfo SET ScheduledArrivalTime = ?, ActualStartTime = ?, ActualArrivalTime = ?, NumberOfPassengerIn = ?,"

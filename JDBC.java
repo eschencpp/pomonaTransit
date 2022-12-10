@@ -17,6 +17,7 @@ public class JDBC {
                     displayTripSchedules();
                     break;
                 case "2":
+                    System.out.println("Editing Trip Offer: ");
                     editTripOffer();
                     break;
                 case "3":
@@ -54,12 +55,13 @@ public class JDBC {
     private static void displayTripSchedules(){
         TripOfferingDao t = new TripOfferingDao();
         System.out.println("Please enter your trip query: ");
+        String starta = sc.nextLine();
         System.out.println("Enter a starting location: ");
-        String startL = sc.next();
+        String startL = sc.nextLine();
         System.out.println("Enter a destination: ");
-        String dest = sc.next();
+        String dest = sc.nextLine();
         System.out.println("Enter a date: (YYYY-MM-DD)");
-        String date = sc.next();
+        String date = sc.nextLine();
         try {
             t.showOfferings(startL, dest, date);
         } catch (SQLException e) {
@@ -92,28 +94,40 @@ public class JDBC {
                 break;
             case 2: //Adding a trip offering
                 System.out.println("Adding trip offering");
-                System.out.println("Enter a trip number: ");
-                tripNumber = sc.nextInt();
-                sc.nextLine();
-                System.out.println("Enter a date: (YYYY-MM-DD)");
-                date = sc.nextLine();
-                System.out.println("Enter the schedueled start time: ");
-                startTime = sc.nextLine();
-                System.out.println("Enter the schedueled arrival time: ");
-                String arrivalTime = sc.nextLine();
-                System.out.println("Enter the driver name: ");
-                String driver = sc.nextLine();
-                System.out.println("Enter the bus ID: ");
-                int busID = sc.nextInt();
-                TripOffering t = new TripOffering(tripNumber, date, startTime, arrivalTime, driver, busID);
-                try {
-                    tr.add(t);
-                    System.out.println("Trip offering added successfully");
-                } catch (SQLException e) {
-                    System.out.println("Error. Offering could not be added.");
-                    e.printStackTrace();
-                    break;
+                boolean flag = true;
+                while(flag == true){
+                    System.out.println("Enter a trip number: ");
+                    tripNumber = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Enter a date: (YYYY-MM-DD)");
+                    date = sc.nextLine();
+                    System.out.println("Enter the schedueled start time: ");
+                    startTime = sc.nextLine();
+                    System.out.println("Enter the schedueled arrival time: ");
+                    String arrivalTime = sc.nextLine();
+                    System.out.println("Enter the driver name: ");
+                    String driver = sc.nextLine();
+                    System.out.println("Enter the bus ID: ");
+                    int busID = sc.nextInt();
+                    TripOffering t = new TripOffering(tripNumber, date, startTime, arrivalTime, driver, busID);
+                    try {
+                        tr.add(t);
+                        System.out.println("Trip offering added successfully");
+                    } catch (SQLException e) {
+                        System.out.println("Error. Offering could not be added.");
+                        e.printStackTrace();
+                        break;
+                    }
+                    sc.nextLine();
+                    System.out.println("Would you like to add another trip offering?");
+                    String userAnswer = sc.nextLine().toLowerCase();
+                    if(userAnswer.equals("y") || userAnswer.equals("yes")){
+                        System.out.println("Adding another trip offering: ");
+                    }else{
+                        flag = false;
+                    }
                 }
+                
                 break;
             case 3: //Edit a driver
                 System.out.println("Editing driver.");
@@ -265,7 +279,7 @@ public class JDBC {
             e.printStackTrace();
         }
 
-        //TODO ask if additional info add
+        //Ask for additional info
         System.out.println("Enter Scheduled Arrival Time: ");
         String ScheduledArrivalTime = sc.next();
         System.out.println("Enter Actual Start Time: ");

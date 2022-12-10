@@ -37,14 +37,13 @@ public class DriverDao {
             = connection.prepareStatement(query);
         ps.setString(1, DriverName);
         ps.setString(2, date);
-        System.out.println(query);
         ResultSet rs = ps.executeQuery();
         ResultSetMetaData rsmd = rs.getMetaData();
         int columnsNumber = rsmd.getColumnCount();
         while (rs.next()) {
         for (int i = 1; i <= columnsNumber; i++) {
             if (i > 1){
-                System.out.print(",  ");
+                System.out.print("  |  ");
             }
             String columnValue = rs.getString(i);
             System.out.print(rsmd.getColumnName(i) + " " + columnValue);
